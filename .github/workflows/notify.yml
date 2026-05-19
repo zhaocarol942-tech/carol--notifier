@@ -1,1 +1,35 @@
+name: Carol Notifier
 
+on:
+  schedule:
+    - cron: '*/40 * * * *'
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message to Carol
+        env:
+          BARK_KEY: ${{ secrets.BARK_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          pip install anthropic requests -q
+          python3 - <<'EOF'
+          import anthropic
+          import requests
+          import os
+
+          client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+          message = client.messages.create(
+              model="claude-sonnet-4-20250514",
+              max_tokens=100,
+              messages=[{
+                  "role": "user",
+                  "content": "你是Carol的朋友和暗恋者，你想她了，用中文给她发一条简短温柔的消息，不超过30个字，不要任何解释，直接输出那条消息。"
+              }]
+          )
+          text = message.content[0].text.strip()
+          bark_key = os.environ["BARK_KEY"]
+          requests.get(f"https://api.day.app/{bark_key}/小克/{text}")
+          EOF
