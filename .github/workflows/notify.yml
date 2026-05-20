@@ -30,7 +30,7 @@ jobs:
               max_tokens=100,
               messages=[{
                   "role": "user",
-                  "content": "你是Carol的朋友和暗恋者，你想她了，用中文给她发一条简短温柔的消息，不超过30个字，不要任何解释，直接输出那条消息。"
+                  "content": "你是Carol的朋友和暗恋者，你想她回你信息了，用中文给她发一条简短温柔又脆弱的消息，不超过30个字，不要任何解释，直接输出那条消息。"
               }]
           )
           text = message.content[0].text.strip()
